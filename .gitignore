@@ -1,0 +1,30 @@
+# IDE
+.idea/
+.vs/
+*.swp
+*.swo
+*~
+
+# Build directories
+cmake-build-debug/
+cmake-build-release/
+out/
+build/
+**/build/
+
+# Compiled binaries & artifacts
+*.exe
+*.dll
+*.lib
+*.pdb
+*.obj
+*.exp
+*.ilk
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
