@@ -1,50 +1,16 @@
 #define _WIN32_WINNT 0x0A00
-
 #include <iostream>
 #include "external/httplib.h"
 #include "external/json.hpp"
 #include <tokenizers_cpp.h>
 #include <chrono>
 #include "external/LoadBytesFromFile.cpp"
+#include "inference_request.h"
+#include "serverHTTP.h"
 using json = nlohmann::json; 
 using namespace httplib;
 
-//primer paso , definir lo que va a venir como request
-
-struct InferenceRequest{
-	uint64_t id;
-	std::string prompt; 
-	std::vector<int>tokens; 
-
-	float temperature = 0.7f;
-	int max_quantity_of_tokens = 128; 
-
-
-
-	bool is_finished = false; 
-	std::vector<int> output_tokens; 
-	std::string error_message; // if smt failed 
-	
-	std::chrono::steady_clock::time_point enqueue_time;
-	std::chrono::steady_clock::time_point start_time;
-};
-
-
-
-
-/*
-	PROMPT ==> HTTP (POST)
-	PROMPT ==> TOKENS 
-	TOKENS (EL PROMPT) ==> REQUEST QUEUE
-	REQUEST QUEUE ==> k-v caching (CPU usage / RAM usage)
-
-	SCHEDULER ==> CEREBRO VA A ESTAR MONITOREANDO EL CPU USAGE Y EL PROMPT PARA VER SI HAY ESPACIO PARA 
-				  ENVIAR EL PROMPT TOKENIZADO
-
-*/
-
-
-int main (void){
+void run_server(){
 
 	Server svr;
 
@@ -65,7 +31,7 @@ int main (void){
 															
 
 	svr.Get("/hi", [](const httplib::Request &req, httplib::Response &res) {
-	  res.set_content("Hello World!", "text/plain");
+	  res.set_content("Hello World!", "text/plain"); // endpoint test
 	});
 
 
