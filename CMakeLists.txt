@@ -15,7 +15,8 @@ add_subdirectory(${TOKENIZER_PATH} tokenizers_build EXCLUDE_FROM_ALL)
 add_executable(server_exe 
     main.cpp 
     serverHTTP.cpp
- "external/LoadBytesFromFile.cpp")
+    server_queue.cpp
+    "external/LoadBytesFromFile.cpp")
 
 # 4. Incluir las carpetas de las cabeceras (.h)
 target_include_directories(server_exe PRIVATE 

@@ -10,6 +10,19 @@
 using json = nlohmann::json; 
 using namespace httplib;
 
+//primer paso , definir lo que va a venir como request
+
+/*
+	PROMPT ==> HTTP (POST)
+	PROMPT ==> TOKENS 
+	TOKENS (EL PROMPT) ==> REQUEST QUEUE
+	REQUEST QUEUE ==> k-v caching (CPU usage / RAM usage)
+
+	SCHEDULER ==> CEREBRO VA A ESTAR MONITOREANDO EL CPU USAGE Y EL PROMPT PARA VER SI HAY ESPACIO PARA 
+				  ENVIAR EL PROMPT TOKENIZADO
+
+*/
+
 void run_server(){
 
 	Server svr;

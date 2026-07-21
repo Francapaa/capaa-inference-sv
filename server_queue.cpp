@@ -1,56 +1,45 @@
 #include <iostream>
 #include <chrono>
-#include "serverHTTP.cpp"
 #include <queue>
+#include <mutex>
+#include <condition_variable>
+#include <functional>
+#include "inference_request.h"
 
-struct server_queue {
+class ServerQueue {
 private:
-	int id = 0;
-	bool running = false;
-	bool sleeping = false;
+    uint64_t next_id_ = 0;
 
-    bool req_stop_sleeping = false;
-    int64_t time_last_task = 0;
+    bool running_ = false;
+    bool sleeping_ = false;
+    bool req_stop_sleeping_ = false;
+    int64_t time_last_task_ = 0;
 
-    // queues
-    std::deque<server_task> queue_tasks;
-    std::deque<server_task> queue_tasks_deferred;
+    std::deque<InferenceRequest> queue_tasks_;
+    std::deque<InferenceRequest> queue_tasks_deferred_;
 
-    std::mutex mutex_tasks;
-    std::condition_variable condition_tasks;
+    std::mutex mutex_tasks_;
+    std::condition_variable condition_tasks_;
 
-    // callback functions
-    std::function<void(server_task&&)> callback_new_task;
-    std::function<void(void)>           callback_update_slots;
-    std::function<void(bool)>           callback_sleeping_state;
+    std::function<void(InferenceRequest&&)> callback_new_task_;
+    std::function<void()> callback_update_slots_;
+    std::function<void(bool)> callback_sleeping_state_;
 
 public:
-    int post(server_task&& task, bool front = false);
-    int get_new_id();
+    uint64_t post(InferenceRequest task, bool front = false);
 };
 
-
-int server_queue::post(server_task && task, bool front) {
-
-	std::queue<InferenceRequest> request_queue; 
-
-    const int id = task.id;
-
-    std::cout << "New task with ID:" << id << std::endl;
-
-    if (front) {
-        queue_tasks.push_front(task);
+uint64_t ServerQueue::post(InferenceRequest task, bool front) {
+    {
+        std::lock_guard<std::mutex> lock(mutex_tasks_);
+        task.id = next_id_++;
+        task.enqueue_time = std::chrono::steady_clock::now();
+        if (front) {
+            queue_tasks_.push_front(std::move(task));
+        } else {
+            queue_tasks_.push_back(std::move(task));
+        }
     }
-    else {
-        queue_tasks.push_back(task); 
-    }
-
-    condition_tasks.notify_one(); 
-
-    return id_tasks;
-}
-
-int server_queue::get_new_id() {
-    std::unique_lock::<std::mutex> lock(mutex_task);
-    return id + 1; // is not necessary to declare the variable
+    condition_tasks_.notify_one();
+    return next_id_ - 1;
 }
