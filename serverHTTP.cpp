@@ -7,6 +7,7 @@
 #include "external/LoadBytesFromFile.cpp"
 #include "inference_request.h"
 #include "serverHTTP.h"
+#include "server_queue.h"
 using json = nlohmann::json; 
 using namespace httplib;
 
@@ -49,37 +50,44 @@ void run_server(){
 
 
 
-	svr.Post("/prompt", [tokenizer](const auto &req, auto &res){
+	ServerQueue queue;
+
+	svr.Post("/prompt", [tokenizer, &queue](const auto &req, auto &res){
 		try{
 			auto j = json::parse(req.body);
-			if(j.contains("id") || j.contains("tokens") || j.contains("max_quantity_of_tokens"	) || j.contains("isFinished") ) {
-				res.status=400; 
-				res.set_content("Error estos datos no son validos", "text/plain"); 
-				return; 
-			}
-			if (j.contains("prompt")){
-				std::string prompt = j["prompt"];
-				std::vector<int> ids = tokenizer -> Encode(prompt); 
-				std::cout<<"Prompt recibido: "<<prompt<<std::endl; 
-				
-				//creamos el inference request
 
-				auto request = std::make_shared<InferenceRequest>(); 
-				//request->id = generate_id(); aca tenemos que crear la funcion que va a generar el id
-				request->prompt = prompt; 
-				request->tokens = ids; 
-				request->enqueue_time = std::chrono::steady_clock::now(); // a partir de ahora se agrega a la cola
-
-				res.set_content("Recibido correctamente", "text/plain");
-			}else{
+			if (!j.contains("prompt")){
 				res.status = 400;
-				res.set_content("Ha ocurrido un error", "text/plain"); 
-				return; 
+				res.set_content("{\"error\": \"Se requiere campo 'prompt'\"}", "application/json");
+				return;
 			}
-		}catch(const std::exception d){
+
+			std::string prompt = j["prompt"];
+			std::vector<int> ids = tokenizer->Encode(prompt);
+			std::cout << "Prompt recibido: " << prompt << std::endl;
+
+			InferenceRequest request;
+			request.prompt = prompt;
+			request.tokens = std::move(ids); // move semantics to contain ids in tokens
+
+			if (j.contains("temperature")) {
+				request.temperature = j["temperature"];
+			}
+			if (j.contains("max_quantity_of_tokens")) {
+				request.max_quantity_of_tokens = j["max_quantity_of_tokens"];
+			}
+
+			uint64_t id = queue.post(std::move(request)); // move semantics again
+
+			json response = {
+				{"id", id},
+				{"status", "queued"}
+			};
+			res.set_content(response.dump(), "application/json");
+
+		}catch(const std::exception& d){
 			res.status = 400;
-            res.set_content("JSON inválido", "text/plain");
-			return; 
+			res.set_content("{\"error\": \"JSON inválido\"}", "application/json");
 		}
 	});
 
