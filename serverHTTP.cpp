@@ -39,7 +39,7 @@ void run_server(){
 		return (c < 32 && c != '\n' && c != '\r' && c != '\t');
 		}), json_str.end());
 
-	auto tokenizer = std::shared_ptr<tokenizers::Tokenizer>(
+	auto tokenizer = std::unique_ptr<tokenizers::Tokenizer>(
 		tokenizers::Tokenizer::FromBlobJSON(json_str).release()
 	);
 															
@@ -52,7 +52,7 @@ void run_server(){
 
 	ServerQueue queue;
 
-	svr.Post("/prompt", [tokenizer, &queue](const auto &req, auto &res){
+	svr.Post("/prompt", [&tokenizer, &queue](const auto &req, auto &res){
 		try{
 			auto j = json::parse(req.body);
 

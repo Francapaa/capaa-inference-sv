@@ -27,4 +27,6 @@ private:
 
 public:
     uint64_t post(InferenceRequest task, bool front = false);
+    size_t size() const;
+    bool empty() const;
 };
