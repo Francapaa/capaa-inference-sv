@@ -15,10 +15,12 @@ uint64_t ServerQueue::post(InferenceRequest task, bool front) {
     return next_id_ - 1;
 }
 
-size_t ServerQueue::size() const{
-
+size_t ServerQueue::size() const {
+    std::lock_guard<std::mutex> lock(mutex_tasks_);
+    return queue_tasks_.size();
 }
 
-bool ServerQueue::empty() const{
-
+bool ServerQueue::empty() const {
+    std::lock_guard<std::mutex> lock(mutex_tasks_);
+    return queue_tasks_.empty();
 }

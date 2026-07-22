@@ -18,7 +18,7 @@ private:
     std::deque<InferenceRequest> queue_tasks_;
     std::deque<InferenceRequest> queue_tasks_deferred_;
 
-    std::mutex mutex_tasks_;
+    mutable std::mutex mutex_tasks_;
     std::condition_variable condition_tasks_;
 
     std::function<void(InferenceRequest&&)> callback_new_task_;

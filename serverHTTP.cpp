@@ -4,6 +4,7 @@
 #include "external/json.hpp"
 #include <tokenizers_cpp.h>
 #include <chrono>
+#include <optional>
 #include "external/LoadBytesFromFile.cpp"
 #include "inference_request.h"
 #include "serverHTTP.h"
@@ -51,10 +52,11 @@ void run_server(){
 
 
 	ServerQueue queue;
+	//std::optional<InferenceRequest>try_pop();
 
 	svr.Post("/prompt", [&tokenizer, &queue](const auto &req, auto &res){
 		try{
-			auto j = json::parse(req.body);
+			auto j = json::parse(req.body);	
 
 			if (!j.contains("prompt")){
 				res.status = 400;

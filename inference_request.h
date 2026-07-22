@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <optional>
 
 struct InferenceRequest {
     uint64_t id;
@@ -13,7 +14,7 @@ struct InferenceRequest {
 
     bool is_finished = false;
     std::vector<int> output_tokens;
-    std::string error_message;
+    std::string error_message; 
 
     std::chrono::steady_clock::time_point enqueue_time;
     std::chrono::steady_clock::time_point start_time;
