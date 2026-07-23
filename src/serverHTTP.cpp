@@ -6,9 +6,9 @@
 #include <chrono>
 #include <optional>
 #include "external/LoadBytesFromFile.cpp"
-#include "inference_request.h"
-#include "serverHTTP.h"
-#include "server_queue.h"
+#include "include/inference_request.h"
+#include "include/serverHTTP.h"
+#include "include/server_queue.h"
 using json = nlohmann::json; 
 using namespace httplib;
 

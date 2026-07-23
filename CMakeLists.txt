@@ -13,11 +13,11 @@ add_subdirectory(${TOKENIZER_PATH} tokenizers_build EXCLUDE_FROM_ALL)
 # 3. Tu Ejecutable
 # Agregamos tus archivos .cpp (main y el del servidor)
 add_executable(server_exe 
-    main.cpp 
-    serverHTTP.cpp
-    server_queue.cpp
-    ops.cpp
-    layers.cpp
+    "src/main.cpp" 
+    "src/serverHTTP.cpp"
+    "src/server_queue.cpp"
+    "src/ops.cpp"
+    "src/layers.cpp"
     "external/LoadBytesFromFile.cpp")
 
 # 4. Incluir las carpetas de las cabeceras (.h)
