@@ -17,6 +17,7 @@ add_executable(server_exe
     serverHTTP.cpp
     server_queue.cpp
     ops.cpp
+    layers.cpp
     "external/LoadBytesFromFile.cpp")
 
 # 4. Incluir las carpetas de las cabeceras (.h)
