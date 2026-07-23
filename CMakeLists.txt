@@ -29,3 +29,17 @@ target_include_directories(server_exe PRIVATE
 
 # 5. Vincular las librerías
 target_link_libraries(server_exe PRIVATE tokenizers_cpp)
+
+# 6. Tests
+enable_testing()
+
+add_executable(arena_test
+    "test/arena_test.cpp"
+)
+
+target_include_directories(arena_test PRIVATE
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}
+)
+
+add_test(NAME ArenaAllocator COMMAND arena_test)
