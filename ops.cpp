@@ -76,36 +76,25 @@ Tensor softmax(const Tensor& t) {
     return result;
 }
 
-static void layer_norm_inplace(float* data, const float* gamma, const float* beta,
-                                size_t n, float eps) {
-    float mean = 0.0f;
-    for (size_t i = 0; i < n; ++i) mean += data[i];
-    mean /= static_cast<float>(n);
-
-    //calculate mean = media
-
-    float var = 0.0f;
+static void rms_norm_inplace(float* data, const float* gamma, size_t n, float eps) {
+    float sum_sq = 0.0f; // sum square root
     for (size_t i = 0; i < n; ++i) {
-        float diff = data[i] - mean;
-        var += diff * diff;
+        sum_sq += data[i] * data[i];
     }
-    var /= static_cast<float>(n);
-
-    //calculate var = varianza
-
-    float inv_std = 1.0f / std::sqrt(var + eps);
+    float rms = std::sqrt(sum_sq / static_cast<float>(n) + eps);
+    float inv_rms = 1.0f / rms;
     for (size_t i = 0; i < n; ++i) {
-        data[i] = (data[i] - mean) * inv_std * gamma[i] + beta[i];
+        data[i] = (data[i] * inv_rms) * gamma[i];
     }
 }
 
-Tensor layer_norm(const Tensor& t, const Tensor& gamma, const Tensor& beta, float eps) {
+Tensor RMSNorm(const Tensor& t, const Tensor& gamma, float eps) {
     auto shape = t.shape();
-    if (shape.empty()) throw std::invalid_argument("layer_norm on empty tensor");
+    if (shape.empty()) throw std::invalid_argument("RMSNorm on empty tensor");
 
     size_t last_dim = shape.back();
-    if (gamma.size() != last_dim || beta.size() != last_dim) {
-        throw std::invalid_argument("layer_norm gamma/beta size mismatch");
+    if (gamma.size() != last_dim) {
+        throw std::invalid_argument("RMSNorm gamma size mismatch");
     }
 
     size_t outer = t.size() / last_dim;
@@ -113,7 +102,7 @@ Tensor layer_norm(const Tensor& t, const Tensor& gamma, const Tensor& beta, floa
     for (size_t i = 0; i < outer; ++i) {
         float* slice = result.data() + i * last_dim;
         std::copy(t.data() + i * last_dim, t.data() + (i + 1) * last_dim, slice);
-        layer_norm_inplace(slice, gamma.data(), beta.data(), last_dim, eps);
+        rms_norm_inplace(slice, gamma.data(), last_dim, eps);
     }
     return result;
 }
