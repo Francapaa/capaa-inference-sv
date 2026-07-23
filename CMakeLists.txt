@@ -18,11 +18,12 @@ add_executable(server_exe
     "src/server_queue.cpp"
     "src/ops.cpp"
     "src/layers.cpp"
-    "external/LoadBytesFromFile.cpp")
+    "external/LoadBytesFromFile.cpp" "include/arenaAllocator.h")
 
 # 4. Incluir las carpetas de las cabeceras (.h)
 target_include_directories(server_exe PRIVATE 
     ${CMAKE_SOURCE_DIR}                          # Para httplib.h si está en la raíz
+    ${CMAKE_SOURCE_DIR}/include                  # Para headers del proyecto
     ${TOKENIZER_PATH}/include                    # Para tokenizers_cpp.h
 )
 
