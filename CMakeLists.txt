@@ -43,3 +43,15 @@ target_include_directories(arena_test PRIVATE
 )
 
 add_test(NAME ArenaAllocator COMMAND arena_test)
+
+add_executable(ops_test
+    "test/ops_test.cpp"
+    "src/ops.cpp"
+)
+
+target_include_directories(ops_test PRIVATE
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}
+)
+
+add_test(NAME OpsTest COMMAND ops_test)
