@@ -73,7 +73,7 @@ const float* BigramModel::forward(int token_id) const {
         which are prob-log of each next token
     */
     if (token_id >= vocab_size()) {
-        throw std::runtime_error("The token cannot be greater than the vocab_size")
+        throw std::runtime_error("The token cannot be greater than the vocab_size"); 
     }
 
     return logits_.data() + static_cast<size_t>(token_id) * vocab_size_;
