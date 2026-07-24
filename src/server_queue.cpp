@@ -1,4 +1,4 @@
-#include "include/server_queue.h"
+#include "include/server_queue.hpp"
 
 uint64_t ServerQueue::post(InferenceRequest task, bool front) {
     {

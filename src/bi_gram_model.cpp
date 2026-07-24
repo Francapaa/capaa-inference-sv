@@ -1,4 +1,4 @@
-﻿#include "include/bi_gram_model.h"
+﻿#include "include/bi_gram_model.hpp"
 #include <cmath>
 #include <numeric>
 #include <algorithm>

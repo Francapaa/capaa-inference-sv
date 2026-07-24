@@ -1,5 +1,5 @@
-#include "ops.h"
-#include "tensor.h"
+#include "ops.hpp"
+#include "tensor.hpp"
 #include <iostream>
 #include <cmath>
 #include <stdexcept>

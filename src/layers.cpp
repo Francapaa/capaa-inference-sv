@@ -1,5 +1,5 @@
-#include "include/layers.h"
-#include "include/ops.h"
+#include "include/layers.hpp"
+#include "include/ops.hpp"
 #include <cmath>
 
 Linear::Linear(size_t in_features, size_t out_features, bool bias)

@@ -4,7 +4,7 @@
 #include <condition_variable>
 #include <functional>
 #include <chrono>
-#include "inference_request.h"
+#include "inference_request.hpp"
 
 class ServerQueue {
 private:

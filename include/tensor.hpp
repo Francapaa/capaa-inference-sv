@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <numeric>
 #include <algorithm>
-#include "arenaAllocator.h"
+#include "arenaAllocator.hpp"
 
 class Tensor {
 public:

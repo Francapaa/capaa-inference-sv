@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cassert>
 #include <cstring>
-#include "arenaAllocator.h"
-#include "tensor.h"
+#include "arenaAllocator.hpp"
+#include "tensor.hpp"
 
 static int tests_passed = 0;
 static int tests_failed = 0;

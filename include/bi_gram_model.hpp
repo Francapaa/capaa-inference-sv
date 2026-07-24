@@ -1,5 +1,5 @@
 #pragma once
-#include "tensor.h"
+#include "tensor.hpp"
 #include <vector>
 #include <random>
 
