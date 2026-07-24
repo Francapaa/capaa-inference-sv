@@ -106,10 +106,10 @@ int BigramModel::sample(const float* logits_row, float temperature) const {
         sum += probs[i];
     }
 
-    float r = std::uniform_real_distribution<float>{0.0f, 1.0f}(rng_);
+    float r = std::uniform_real_distribution<float>{0.0f, sum}(rng_); // scale r by sum
     float cum = 0.0f;
     for (size_t i = 0; i < n; ++i) {
-        cum += probs[i] / sum;
+        cum += probs[i]; // we change by 4 millions divisions to only 1
         if (r < cum) return static_cast<int>(i);
     }
 
