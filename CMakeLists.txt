@@ -18,7 +18,10 @@ add_executable(server_exe
     "src/server_queue.cpp"
     "src/ops.cpp"
     "src/layers.cpp"
-    "external/LoadBytesFromFile.cpp" "include/arenaAllocator.h")
+    "external/LoadBytesFromFile.cpp" 
+    "include/arenaAllocator.h" 
+    "include/bi_gram_model.h"
+    "src/bi_gram_model.cpp")
 
 # 4. Incluir las carpetas de las cabeceras (.h)
 target_include_directories(server_exe PRIVATE 
@@ -35,7 +38,7 @@ enable_testing()
 
 add_executable(arena_test
     "test/arena_test.cpp"
-)
+ "include/bi_gram_model.h" "src/bi_gram_model.cpp")
 
 target_include_directories(arena_test PRIVATE
     ${CMAKE_SOURCE_DIR}/include
@@ -47,7 +50,7 @@ add_test(NAME ArenaAllocator COMMAND arena_test)
 add_executable(ops_test
     "test/ops_test.cpp"
     "src/ops.cpp"
-)
+ "include/bi_gram_model.h" "src/bi_gram_model.cpp")
 
 target_include_directories(ops_test PRIVATE
     ${CMAKE_SOURCE_DIR}/include
