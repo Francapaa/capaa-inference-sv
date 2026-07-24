@@ -125,7 +125,7 @@ std::vector<int> BigramModel::generate(const std::vector<int>& prompt,
         loop to max_tokens:
         1) forward(seed) -> get the row of prob-log to the current token
         2) sample() -> choose the next token with temperature and add to output
-        3) the new token becomes to the new seed
+        3) the new token becomes the new seed
         EXAMPLE:
         prompt [12, 45, 78], seed = 78:
         seed=78 → forward(78) → sample → 3  → output=[3],  seed=3
